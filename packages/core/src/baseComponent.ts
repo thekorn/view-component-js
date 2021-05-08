@@ -2,7 +2,9 @@ import {promises as fs} from 'fs';
 
 import { parse, compile, render, interpolate } from '@view-components/html-parser';
 
-export function BaseComponent<T>(templateFilename: string) {
+interface DefaultContext {}
+
+export function BaseComponent<T = DefaultContext>(templateFilename: string) {
   return class AbstractBaseComponent {
 
     constructor() {}

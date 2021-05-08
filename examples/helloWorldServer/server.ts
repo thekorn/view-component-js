@@ -7,7 +7,7 @@ const app = express();
 
 app.get('/', async (_req, res) => {
   const page = new Page();
-  const content = await page.render({user: 'hans'});
+  const content = await page.render({user: 'Mic'});
   res.send(content)
 });
 
