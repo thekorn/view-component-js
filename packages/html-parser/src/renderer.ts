@@ -1,4 +1,2 @@
-import render from 'dom-serializer';
-
-export default render;
+export {default as render}  from 'dom-serializer';
 

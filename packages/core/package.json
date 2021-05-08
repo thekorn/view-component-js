@@ -16,5 +16,8 @@
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "dependencies": {
+    "@view-components/html-parser": "^0.0.0"
   }
 }

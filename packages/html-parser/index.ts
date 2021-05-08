@@ -1,7 +1,5 @@
-import parse from './lib/parser';
-import compile from './lib/compiler';
-import render from './lib/renderer';
-import * as logger from './lib/logger';
+import { parse, compile, render } from './src/index';
+import * as logger from './src/logger';
 
 async function main() {
   const result = await parse('<div data=${1}><h1>Hello World</h1></div>')
