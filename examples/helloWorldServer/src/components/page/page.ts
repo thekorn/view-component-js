@@ -1,7 +1,7 @@
 import { BaseComponent, getDefaultTemplateFilename } from '@view-components/core';
 
-export default class Page extends BaseComponent {
-  getTemplate() {
-    return getDefaultTemplateFilename(__filename);
-  }
+interface PageContext {
+  user: string
 }
+
+export default class Page extends BaseComponent<PageContext>(getDefaultTemplateFilename(__filename)) {}
