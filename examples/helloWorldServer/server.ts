@@ -5,9 +5,10 @@ import Page from './src/components/page/page'
 // Create Express server
 const app = express();
 
-app.get('/', (_req, res) => {
+app.get('/', async (_req, res) => {
   const page = new Page();
-  res.send(page.render())
+  const content = await page.render();
+  res.send(content)
 });
 
 (async () => {

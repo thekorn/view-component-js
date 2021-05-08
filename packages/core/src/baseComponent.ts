@@ -1,12 +1,18 @@
+import {promises as fs} from 'fs';
 export abstract class BaseComponent {
   abstract getTemplate(): string
 
-  constructor() {
-    console.log('filename ', this.getTemplate());
-    
+  constructor() {}
+
+  // TODO: cache
+  private async loadTemplate(): Promise<string> {
+    const templateFn = this.getTemplate()
+    const content = await fs.readFile(templateFn);
+    return content.toString();
   }
 
-  render(): any {
-    return '<h1>this got rendered ffff</h1>'
+  async render(): Promise<string> {
+    const templateContent = await this.loadTemplate()
+    return templateContent;
   }
 }
