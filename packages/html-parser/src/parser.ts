@@ -1,23 +1,23 @@
-import { ElementType, Parser } from 'htmlparser2';
-import { DomHandler, Node, Element } from 'domhandler';
+import { Parser } from 'htmlparser2';
+import { DomHandler, Node } from 'domhandler';
 
-function elementCB(element: Element) {
-  console.log('---> element', element);
-  if (element.type === ElementType.Tag && element.name === 'p') {
-    element.name = 'div'
-  }
-}
+class ParserError extends Error {}
 
-export async function parse(html: string): Promise<Node[]>{
+// TODO: type for any in components
+export async function parse(html: string): Promise<Node>{
   return new Promise((resolve, reject) => {
     const handler = new DomHandler((error, dom) => {
       if (error) {
         console.error('parser.parse error', error);
         reject(error)
       } else {
-        resolve(dom)
+        if (dom.length != 1) {
+          reject(new ParserError('template needs a single root element'))
+        } else {
+          resolve(dom[0])
+        }
       }
-    }, null, elementCB);
+    });
     const parser = new Parser(handler);
     parser.write(html);
     parser.end();

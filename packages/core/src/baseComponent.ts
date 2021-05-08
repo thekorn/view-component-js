@@ -1,6 +1,6 @@
 import {promises as fs} from 'fs';
 
-import { parse, compile, render, interpolate } from '@view-components/html-parser';
+import { parse, render, interpolate, traverseNode, Node } from '@view-components/html-parser';
 
 interface DefaultContext {}
 interface Component {
@@ -13,7 +13,14 @@ interface Component {
 export function BaseComponent<T = DefaultContext>(templateFilename: string, components?: Record<string, any>) {
   return class AbstractBaseComponent implements Component {
 
-    constructor() {}
+    components: Map<string, any>;
+
+    constructor() {
+      this.components = new Map(Object.entries(components || {}));
+      this.components.forEach((value, key, map) => {
+        map.set(key.toLowerCase(), value)
+      })
+    }
 
     // TODO: cache
     async loadTemplate(): Promise<string> {
@@ -23,10 +30,11 @@ export function BaseComponent<T = DefaultContext>(templateFilename: string, comp
     }
 
     // TODO: fix type
-    async compile(): Promise<any> {
+    async compile(): Promise<Node> {
       const templateContent = await this.loadTemplate()
-      const nodes = await parse(templateContent)
-      return compile(nodes, components)
+      const node = await parse(templateContent)
+
+      return traverseNode<Node>(node, this.components)
     }
 
     async render(params: T): Promise<string> {
