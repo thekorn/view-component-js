@@ -3,9 +3,15 @@ import {promises as fs} from 'fs';
 import { parse, compile, render, interpolate } from '@view-components/html-parser';
 
 interface DefaultContext {}
+interface Component {
+  loadTemplate: () => Promise<string>;
+  compile: () => Promise<any>
+  render: (params: any) => Promise<string>
+}
 
-export function BaseComponent<T = DefaultContext>(templateFilename: string) {
-  return class AbstractBaseComponent {
+// TODO: in components arguments value has to implement Component
+export function BaseComponent<T = DefaultContext>(templateFilename: string, components?: Record<string, any>) {
+  return class AbstractBaseComponent implements Component {
 
     constructor() {}
 
@@ -16,10 +22,11 @@ export function BaseComponent<T = DefaultContext>(templateFilename: string) {
       return content.toString();
     }
 
-    async compile() {
+    // TODO: fix type
+    async compile(): Promise<any> {
       const templateContent = await this.loadTemplate()
       const nodes = await parse(templateContent)
-      return compile(nodes)
+      return compile(nodes, components)
     }
 
     async render(params: T): Promise<string> {
