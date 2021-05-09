@@ -1,6 +1,6 @@
 import {promises as fs} from 'fs';
 
-import { parse, render, interpolate, traverseNode, Node } from '@view-components/html-parser';
+import { parse, render, interpolate, traverseNode, Node, logger } from '@view-components/html-parser';
 
 interface DefaultContext {}
 interface Component {
@@ -30,15 +30,21 @@ export function BaseComponent<T = DefaultContext>(templateFilename: string, comp
     }
 
     // TODO: fix type
-    async compile(): Promise<Node> {
+    async compile(params?: T, children?: Node[]): Promise<Node> {
       const templateContent = await this.loadTemplate()
       const node = await parse(templateContent)
-
-      return traverseNode<Node>(node, this.components)
+      const result = await traverseNode<Node>(node, this.components, params, children)
+      return result
     }
 
-    async render(params: T): Promise<string> {
-      const code = await this.compile()
+    async render(params?: T): Promise<string> {
+      const code = await this.compile(params)
+      
+      //logger.log(code);
+
+      //const c = await parse('<p>hello hans<span>some text</span></p>')
+      //logger.log(c);
+      
       const content = render(code);
       if (params) {
         return interpolate(content, params);

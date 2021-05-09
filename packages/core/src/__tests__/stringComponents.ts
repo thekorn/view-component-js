@@ -32,13 +32,13 @@ test('basic interpolation missing reference', async () => {
     await expect(t).rejects.toThrow(ReferenceError);
 });
 
-//test('nested component', async () => {
-//    class helloWorld extends BaseTestComponent('<div>hello</div>') {}
-//    class myComponent extends BaseTestComponent('<helloWorld></helloWorld>', {helloWorld}) {}
-//    const component = new myComponent()
-//    const content = await component.render({});
-//    expect(content).toBe('<div>hello</div>');
-//});
+test('nested component', async () => {
+    class helloWorld extends BaseTestComponent('<div>hello</div>') {}
+    class myComponent extends BaseTestComponent('<helloWorld></helloWorld>', {helloWorld}) {}
+    const component = new myComponent()
+    const content = await component.render({});
+    expect(content).toBe('<div>hello</div>');
+});
 
 test('nested component', async () => {
     class myComponent extends BaseTestComponent('<div><h1>some title</h1></div>') {}

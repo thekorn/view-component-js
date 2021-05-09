@@ -25,10 +25,10 @@ test('custom component', async () => {
     expect(content).toBe('<p>hello</p>');
 });
 
-test('custom component with interpolation', async () => {
-    class helloWorld extends BaseTestComponent('<p>hello ${user}</p>') {}
-    class myComponent extends BaseTestComponent('<helloWorld></helloWorld>', {helloWorld}) {}
+test('custom component with interpolation and slot', async () => {
+    class helloWorld extends BaseTestComponent('<p>hello ${user}<span><slot></slot></span></p>') {}
+    class myComponent extends BaseTestComponent('<helloWorld user="hans">some text</helloWorld>', {helloWorld}) {}
     const component = new myComponent()
-    const content = await component.render({user: 'hans'});
-    expect(content).toBe('<p>hello hans</p>');
+    const content = await component.render();
+    expect(content).toBe('<p>hello hans<span>some text</span></p>');
 });
